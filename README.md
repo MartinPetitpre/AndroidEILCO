@@ -1,2 +1,2 @@
 # AndroidEILCO
-TD dev app mobiles Gabrielel Radenne Martin Petitpré
+TD dev app mobiles Gabrielle Radenne Martin Petitpré

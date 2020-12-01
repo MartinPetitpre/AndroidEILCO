@@ -17,7 +17,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import static com.example.td6.R.id.saisie;
+
 import static com.example.td6.R.id.rechercher;
 
 public class MainActivity extends AppCompatActivity {
@@ -45,11 +45,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        setTitle(getLocalClassName());
-        final EditText edtext = (EditText) findViewById(saisie);
-        final Intent intent = new Intent(this, searchRepo.class);
         Button rechercherBouton = (Button) findViewById(rechercher);
-        intent.putExtra("recherche", edtext.getText().toString());
+        final Intent intent = new Intent(this, searchRepo.class);
 
 
 
@@ -57,6 +54,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                setTitle(getLocalClassName());
+                final EditText edtext = (EditText) findViewById(R.id.saisie);
+                intent.putExtra("recherche", edtext.getText().toString());
                 startActivity(intent);
                 finish();
 

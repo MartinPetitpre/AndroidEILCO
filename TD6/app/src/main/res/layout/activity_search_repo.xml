@@ -18,10 +18,10 @@
 
     <TextView
         android:id="@+id/nomRepo"
-        android:layout_width="178dp"
-        android:layout_height="33dp"
-        android:text=""
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
         tools:ignore="MissingConstraints" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+

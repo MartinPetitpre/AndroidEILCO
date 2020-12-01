@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -31,7 +32,13 @@ public class searchRepo extends AppCompatActivity {
 
         Button valider = (Button) findViewById(rechercher);
         final EditText edtext = (EditText) findViewById(saisie);
-        System.out.println(edtext);
+
+        Intent intent = getIntent();
+        String search="toto";
+        if (intent.hasExtra("recherche")) {
+            search = intent.getStringExtra("recherche");
+        }
+        Toast.makeText(searchRepo.this,"Résultats de recherche pour :" + search, Toast.LENGTH_SHORT).show();
 
         GithubService githubService = new Retrofit.Builder()
                 .baseUrl(GithubService.ENDPOINT)
@@ -39,7 +46,7 @@ public class searchRepo extends AppCompatActivity {
                 .build()
                 .create(GithubService.class);
 
-        githubService.searchRepos("AndroidEILCO").enqueue(new Callback<Repos>() {
+        githubService.searchRepos(search).enqueue(new Callback<Repos>() {
             @Override
             public void onResponse(Call<Repos> call, Response<Repos> response) {
                 afficherRepos(response.body());

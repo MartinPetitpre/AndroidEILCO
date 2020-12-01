@@ -2,7 +2,11 @@ package com.example.td6;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import java.util.List;
@@ -12,6 +16,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+
+import static com.example.td6.R.id.saisie;
+import static com.example.td6.R.id.rechercher;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
                 .build()
                 .create(GithubService.class);
 
-        githubService.listRepos("adrienbusin").enqueue(new Callback<List<Repo>>() {
+        githubService.listRepos("martinpetitpre").enqueue(new Callback<List<Repo>>() {
             @Override
             public void onResponse(Call<List<Repo>> call, Response<List<Repo>> response) {
                 afficherRepos(response.body());
@@ -36,6 +43,25 @@ public class MainActivity extends AppCompatActivity {
             public void onFailure(Call<List<Repo>> call, Throwable t) {
 
             }
+        });
+
+        setTitle(getLocalClassName());
+        final EditText edtext = (EditText) findViewById(saisie);
+        final Intent intent = new Intent(this, searchRepo.class);
+        Button rechercherBouton = (Button) findViewById(rechercher);
+        intent.putExtra("recherche", edtext.getText().toString());
+
+
+
+        rechercherBouton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                startActivity(intent);
+                finish();
+
+            }
+
         });
     }
 

@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean chargementDispo;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
         final GridLayoutManager layoutManager = new GridLayoutManager(this, 3);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        /*recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
@@ -61,13 +64,13 @@ public class MainActivity extends AppCompatActivity {
                             Log.i(TAG, " Fin");
 
                             chargementDispo = false;
-                            offset += 20;
+                            //offset += 20;
                             recupererDonnees(offset);
                         }
                     }
                 }
             }
-        });
+        });*/
 
 
         retrofit = new Retrofit.Builder()
@@ -82,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void recupererDonnees(int offset) {
         PokedexApiService service = retrofit.create(PokedexApiService.class);
-        Call<ListePokemon> listePokemonCall = service.getListePokemon(20, offset);
+        Call<ListePokemon> listePokemonCall = service.getListePokemon(898, offset);
 
         listePokemonCall.enqueue(new Callback<ListePokemon>() {
             @Override
@@ -93,7 +96,12 @@ public class MainActivity extends AppCompatActivity {
                     ListePokemon listePokemon = response.body();
                     ArrayList<Pokemon> listePokemon2 = listePokemon.getResults();
 
-                    pokemonAdapter.ajouterPokemon(listePokemon2);
+
+                    insertPokemonDb(listePokemon2);
+                    //getPokemonDb();
+                    List<Pokemon> listePokemonDB =getListePokemonDb();
+                    pokemonAdapter.ajouterPokemon((ArrayList<Pokemon>) listePokemonDB);
+                    //ArrayList<Pokemon> listePokemonDB =
 
                 } else {
                     Log.e(TAG, " onResponse: " + response.errorBody());
@@ -107,4 +115,46 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void insertPokemonDb(ArrayList<Pokemon> listePokemon) {
+        AppDatabase appDb = AppDatabase.getInstance(this);
+        List<Pokemon> listePokemonDb = getListePokemonDb();
+        boolean existeDeja = false;
+
+        //on verifie si le pokemon existe en base
+        for (int i=0; i<listePokemon.size(); i++)
+        {
+            for (int j=0; j<listePokemonDb.size(); j++)
+            {
+                if(listePokemonDb.get(j).getNumber()==listePokemon.get(i).getNumber())
+                {
+                    existeDeja = true;
+                }
+            }
+            if(existeDeja==false)
+            {
+                Log.i(TAG,listePokemon.get(i).getName() );
+                appDb.pokemonDao().insertPokemon(listePokemon.get(i));
+            }
+
+
+        }
+    }
+
+    private void getPokemonDb(){
+        AppDatabase appDb = AppDatabase.getInstance(this);
+
+        List<Pokemon> listePokemonDB = appDb.pokemonDao().getAll();
+        for (int i=0; i<listePokemonDB.size(); i++)
+        {
+            Log.i(TAG, "contenu db " + listePokemonDB.get(i).getName());
+        }
+    }
+
+    private List<Pokemon> getListePokemonDb(){
+        AppDatabase appDb = AppDatabase.getInstance(this);
+        return appDb.pokemonDao().getAll();
+    }
+
+
 }

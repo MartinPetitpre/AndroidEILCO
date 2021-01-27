@@ -15,6 +15,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHolder> {
 
@@ -23,7 +24,7 @@ public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHold
 
     public PokemonAdapter(Context context) {
         this.context = context;
-        dataset = new ArrayList<>();
+        this.dataset = new ArrayList<>();
     }
 
     @Override
@@ -34,12 +35,13 @@ public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Pokemon p = dataset.get(position);
+        Pokemon p = this.dataset.get(position);
         holder.nomPokemonTextView.setText(p.getName());
-
         Glide.with(context)
-                .load("https://cdn.traction.one/pokedex/pokemon/" + p.getNumber() + ".png")
-                .into(holder.pokemonImageView);
+            .load("https://cdn.traction.one/pokedex/pokemon/" + p.getNumber() + ".png")
+            .apply(new RequestOptions()
+                .placeholder(R.drawable.pokeball_neutre))
+            .into(holder.pokemonImageView);
     }
 
     @Override
@@ -47,22 +49,22 @@ public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHold
         return dataset.size();
     }
 
-    public void ajouterPokemon(ArrayList<Pokemon> listePokemon) {
-        dataset.addAll(listePokemon);
+    public void effacer() {
+        this.dataset.clear();
+    }
+
+    public void ajouterPokemon(List<Pokemon> listePokemon) {
+        this.dataset.addAll(listePokemon);
         notifyDataSetChanged();
     }
 
-
     public class ViewHolder extends RecyclerView.ViewHolder {
-
         private ImageView pokemonImageView;
         private TextView nomPokemonTextView;
-
         public ViewHolder(View itemView) {
             super(itemView);
-
-            pokemonImageView = (ImageView) itemView.findViewById(R.id.pokemonImageView);
-            nomPokemonTextView = (TextView) itemView.findViewById(R.id.nomPokemonTextView);
+            this.pokemonImageView = (ImageView) itemView.findViewById(R.id.pokemonImageView);
+            this.nomPokemonTextView = (TextView) itemView.findViewById(R.id.nomPokemonTextView);
         }
     }
 }

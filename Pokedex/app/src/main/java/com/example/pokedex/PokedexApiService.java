@@ -8,8 +8,7 @@ import com.example.pokedex.ListePokemon;
 
 
 public interface PokedexApiService {
-
-    public static final String ENDPOINT = "https://pokeapi.co/api/v2";
+    public static final String ENDPOINT = "https://pokeapi.co/api/v2/";
 
     @GET("pokemon")
     Call<ListePokemon> getListePokemon(@Query("limit") int limit, @Query("offset") int offset);

@@ -13,6 +13,9 @@ public interface PokemonDao {
     @Query("SELECT * FROM pokemon")
     List<Pokemon> getAll();
 
+    @Query("SELECT * FROM pokemon WHERE number >= :idMin AND number <= :idMax")
+    List<Pokemon> getByIdRange(int idMin, int idMax);
+
     @Insert
     void insertPokemon(Pokemon pokemon);
 

@@ -4,14 +4,20 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!-- Si android:allowBackup est mis à true, réinstaller l'application ne supprimera pas la base de données room,
+        ce qui n'est pas désirable car si on modifie le schéma de la base de données sans supprimer les
+        données, une exception se produira :
+        java.lang.IllegalStateException: Room cannot verify the data integrity. Looks like you've changed schema but forgot to update the version number. You can simply fix this by increasing the version number.
+        dans ce cas, il suffit de supprimer les données de l'application et la base de données sera réinitialisée
+    -->
     <application
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".PokemonActivity"></activity>
+        <activity android:name=".PokemonActivity" android:theme="@style/AppThemeNoBar"></activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
